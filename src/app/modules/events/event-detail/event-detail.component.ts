@@ -1,5 +1,5 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService, Event } from '../../../core/services/event.service';
@@ -7,7 +7,7 @@ import { EventService, Event } from '../../../core/services/event.service';
 @Component({
     selector: 'app-event-detail',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     template: `
     <div class="page-container">
       <div class="page-header">

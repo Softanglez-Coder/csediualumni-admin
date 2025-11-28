@@ -1,47 +1,55 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { ReportingService, ReportData } from '../../core/services/reporting.service';
 
 @Component({
     selector: 'app-reporting',
     standalone: true,
-    imports: [CommonModule],
+    imports: [],
     template: `
     <div class="page-container">
       <h1 class="title">Reporting & Analytics</h1>
-
+    
       <div class="charts-grid">
         <div class="card chart-card">
           <h3>User Growth</h3>
           <div class="chart-container">
             <!-- In a real app, use Chart.js or similar. Here we simulate a chart with CSS bars -->
-            <div class="bar-chart" *ngIf="userGrowth()">
-              <div class="bar-group" *ngFor="let value of userGrowth()!.datasets[0].data; let i = index">
-                <div class="bar" [style.height.%]="(value / 100) * 100" [style.background-color]="userGrowth()!.datasets[0].borderColor">
-                  <span class="tooltip">{{ value }}</span>
-                </div>
-                <span class="label">{{ userGrowth()!.labels[i] }}</span>
+            @if (userGrowth()) {
+              <div class="bar-chart">
+                @for (value of userGrowth()!.datasets[0].data; track value; let i = $index) {
+                  <div class="bar-group">
+                    <div class="bar" [style.height.%]="(value / 100) * 100" [style.background-color]="userGrowth()!.datasets[0].borderColor">
+                      <span class="tooltip">{{ value }}</span>
+                    </div>
+                    <span class="label">{{ userGrowth()!.labels[i] }}</span>
+                  </div>
+                }
               </div>
-            </div>
+            }
           </div>
         </div>
-
+    
         <div class="card chart-card">
           <h3>Revenue Trends</h3>
           <div class="chart-container">
-            <div class="bar-chart" *ngIf="revenueData()">
-              <div class="bar-group" *ngFor="let value of revenueData()!.datasets[0].data; let i = index">
-                <div class="bar" [style.height.%]="(value / 20000) * 100" [style.background-color]="revenueData()!.datasets[0].borderColor">
-                  <span class="tooltip">\${{ value }}</span>
-                </div>
-                <span class="label">{{ revenueData()!.labels[i] }}</span>
+            @if (revenueData()) {
+              <div class="bar-chart">
+                @for (value of revenueData()!.datasets[0].data; track value; let i = $index) {
+                  <div class="bar-group">
+                    <div class="bar" [style.height.%]="(value / 20000) * 100" [style.background-color]="revenueData()!.datasets[0].borderColor">
+                      <span class="tooltip">\${{ value }}</span>
+                    </div>
+                    <span class="label">{{ revenueData()!.labels[i] }}</span>
+                  </div>
+                }
               </div>
-            </div>
+            }
           </div>
         </div>
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

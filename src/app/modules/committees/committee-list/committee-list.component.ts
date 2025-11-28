@@ -15,32 +15,34 @@ import { CommitteeService, Committee } from '../../../core/services/committee.se
           <span>+</span> Create Committee
         </a>
       </div>
-
+    
       <div class="grid-container">
-        <div class="card committee-card" *ngFor="let committee of committees()">
-          <div class="card-header">
-            <h3 class="committee-name">{{ committee.name }}</h3>
-            <span class="status-badge" [ngClass]="committee.status">{{ committee.status | titlecase }}</span>
-          </div>
-          <p class="description">{{ committee.description }}</p>
-          <div class="stats">
-            <div class="stat">
-              <span class="label">Members</span>
-              <span class="value">{{ committee.membersCount }}</span>
+        @for (committee of committees(); track committee) {
+          <div class="card committee-card">
+            <div class="card-header">
+              <h3 class="committee-name">{{ committee.name }}</h3>
+              <span class="status-badge" [ngClass]="committee.status">{{ committee.status | titlecase }}</span>
             </div>
-            <div class="stat">
-              <span class="label">Formed</span>
-              <span class="value">{{ committee.formedDate | date }}</span>
+            <p class="description">{{ committee.description }}</p>
+            <div class="stats">
+              <div class="stat">
+                <span class="label">Members</span>
+                <span class="value">{{ committee.membersCount }}</span>
+              </div>
+              <div class="stat">
+                <span class="label">Formed</span>
+                <span class="value">{{ committee.formedDate | date }}</span>
+              </div>
+            </div>
+            <div class="actions">
+              <a [routerLink]="['/committees', committee.id]" class="btn btn-outline btn-sm">Manage</a>
+              <button class="btn btn-outline btn-sm danger" (click)="deleteCommittee(committee)">Delete</button>
             </div>
           </div>
-          <div class="actions">
-            <a [routerLink]="['/committees', committee.id]" class="btn btn-outline btn-sm">Manage</a>
-            <button class="btn btn-outline btn-sm danger" (click)="deleteCommittee(committee)">Delete</button>
-          </div>
-        </div>
+        }
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

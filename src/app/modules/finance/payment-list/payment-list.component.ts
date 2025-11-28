@@ -9,7 +9,7 @@ import { FinanceService, Payment } from '../../../core/services/finance.service'
     template: `
     <div class="page-container">
       <h1 class="title">Payments</h1>
-
+    
       <div class="card">
         <table class="data-table">
           <thead>
@@ -22,20 +22,22 @@ import { FinanceService, Payment } from '../../../core/services/finance.service'
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let payment of payments()">
-              <td>{{ payment.userName }}</td>
-              <td>{{ payment.type | titlecase }}</td>
-              <td class="amount">\${{ payment.amount }}</td>
-              <td>{{ payment.date | date }}</td>
-              <td>
-                <span class="status-badge" [ngClass]="payment.status">{{ payment.status | titlecase }}</span>
-              </td>
-            </tr>
+            @for (payment of payments(); track payment) {
+              <tr>
+                <td>{{ payment.userName }}</td>
+                <td>{{ payment.type | titlecase }}</td>
+                <td class="amount">\${{ payment.amount }}</td>
+                <td>{{ payment.date | date }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="payment.status">{{ payment.status | titlecase }}</span>
+                </td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

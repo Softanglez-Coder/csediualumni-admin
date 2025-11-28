@@ -15,15 +15,15 @@ import { UserService, User } from '../../../core/services/user.service';
           <span>+</span> Add User
         </button>
       </div>
-
+    
       <div class="filters-bar card">
         <div class="search-box">
-          <input 
-            type="text" 
-            placeholder="Search users..." 
+          <input
+            type="text"
+            placeholder="Search users..."
             [(ngModel)]="searchQuery"
             (input)="onSearch()"
-          >
+            >
         </div>
         <div class="filter-actions">
           <select [(ngModel)]="roleFilter" (change)="onFilterChange()">
@@ -39,7 +39,7 @@ import { UserService, User } from '../../../core/services/user.service';
           </select>
         </div>
       </div>
-
+    
       <div class="table-container card">
         <table class="data-table">
           <thead>
@@ -63,37 +63,41 @@ import { UserService, User } from '../../../core/services/user.service';
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let user of filteredUsers()">
-              <td>
-                <div class="user-cell">
-                  <div class="avatar-sm">{{ user.name.charAt(0) }}</div>
-                  <span>{{ user.name }}</span>
-                </div>
-              </td>
-              <td>{{ user.email }}</td>
-              <td>
-                <span class="badge" [ngClass]="'badge-' + user.role">{{ user.role }}</span>
-              </td>
-              <td>
-                <span class="status-dot" [ngClass]="user.status"></span>
-                {{ user.status | titlecase }}
-              </td>
-              <td>{{ user.joinedDate | date }}</td>
-              <td>
-                <div class="actions-cell">
-                  <button class="btn-icon" title="Edit">✏️</button>
-                  <button class="btn-icon danger" title="Delete">🗑️</button>
-                </div>
-              </td>
-            </tr>
-            <tr *ngIf="filteredUsers().length === 0">
-              <td colspan="6" class="empty-state">No users found</td>
-            </tr>
+            @for (user of filteredUsers(); track user) {
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar-sm">{{ user.name.charAt(0) }}</div>
+                    <span>{{ user.name }}</span>
+                  </div>
+                </td>
+                <td>{{ user.email }}</td>
+                <td>
+                  <span class="badge" [ngClass]="'badge-' + user.role">{{ user.role }}</span>
+                </td>
+                <td>
+                  <span class="status-dot" [ngClass]="user.status"></span>
+                  {{ user.status | titlecase }}
+                </td>
+                <td>{{ user.joinedDate | date }}</td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="btn-icon" title="Edit">✏️</button>
+                    <button class="btn-icon danger" title="Delete">🗑️</button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (filteredUsers().length === 0) {
+              <tr>
+                <td colspan="6" class="empty-state">No users found</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

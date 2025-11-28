@@ -15,62 +15,71 @@ import { UserService, User } from '../../../core/services/user.service';
           <button class="btn btn-outline" (click)="goBack()">← Back</button>
           <h1 class="title">{{ isEditing() ? 'Edit User' : 'User Details' }}</h1>
         </div>
-        <button class="btn btn-primary" *ngIf="!isEditing()" (click)="enableEditing()">
-          Edit User
-        </button>
+        @if (!isEditing()) {
+          <button class="btn btn-primary" (click)="enableEditing()">
+            Edit User
+          </button>
+        }
       </div>
-
-      <div class="card detail-card" *ngIf="user()">
-        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Full Name</label>
-              <input type="text" formControlName="name" [readonly]="!isEditing()">
-            </div>
-            
-            <div class="form-group">
-              <label>Email Address</label>
-              <input type="email" formControlName="email" [readonly]="!isEditing()">
-            </div>
-            
-            <div class="form-group">
-              <label>Role</label>
-              <select formControlName="role" *ngIf="isEditing()">
-                <option value="admin">Admin</option>
-                <option value="member">Member</option>
-              </select>
-              <input type="text" [value]="user()?.role | titlecase" readonly *ngIf="!isEditing()">
-            </div>
-            
-            <div class="form-group">
-              <label>Status</label>
-              <select formControlName="status" *ngIf="isEditing()">
-                <option value="active">Active</option>
-                <option value="pending">Pending</option>
-                <option value="rejected">Rejected</option>
-              </select>
-              <div class="status-display" *ngIf="!isEditing()">
-                <span class="status-dot" [ngClass]="user()?.status"></span>
-                {{ user()?.status | titlecase }}
+    
+      @if (user()) {
+        <div class="card detail-card">
+          <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" formControlName="name" [readonly]="!isEditing()">
+              </div>
+              <div class="form-group">
+                <label>Email Address</label>
+                <input type="email" formControlName="email" [readonly]="!isEditing()">
+              </div>
+              <div class="form-group">
+                <label>Role</label>
+                @if (isEditing()) {
+                  <select formControlName="role">
+                    <option value="admin">Admin</option>
+                    <option value="member">Member</option>
+                  </select>
+                }
+                @if (!isEditing()) {
+                  <input type="text" [value]="user()?.role | titlecase" readonly>
+                }
+              </div>
+              <div class="form-group">
+                <label>Status</label>
+                @if (isEditing()) {
+                  <select formControlName="status">
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                }
+                @if (!isEditing()) {
+                  <div class="status-display">
+                    <span class="status-dot" [ngClass]="user()?.status"></span>
+                    {{ user()?.status | titlecase }}
+                  </div>
+                }
+              </div>
+              <div class="form-group">
+                <label>Joined Date</label>
+                <input type="text" [value]="user()?.joinedDate | date" readonly>
               </div>
             </div>
-
-            <div class="form-group">
-              <label>Joined Date</label>
-              <input type="text" [value]="user()?.joinedDate | date" readonly>
-            </div>
-          </div>
-
-          <div class="form-actions" *ngIf="isEditing()">
-            <button type="button" class="btn btn-outline" (click)="cancelEditing()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || isSaving">
-              {{ isSaving ? 'Saving...' : 'Save Changes' }}
-            </button>
-          </div>
-        </form>
-      </div>
+            @if (isEditing()) {
+              <div class="form-actions">
+                <button type="button" class="btn btn-outline" (click)="cancelEditing()">Cancel</button>
+                <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || isSaving">
+                  {{ isSaving ? 'Saving...' : 'Save Changes' }}
+                </button>
+              </div>
+            }
+          </form>
+        </div>
+      }
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       max-width: 800px;

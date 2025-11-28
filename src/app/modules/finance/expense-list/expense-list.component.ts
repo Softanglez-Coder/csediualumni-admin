@@ -14,7 +14,7 @@ import { FinanceService, Expense } from '../../../core/services/finance.service'
           <span>+</span> Add Expense
         </button>
       </div>
-
+    
       <div class="card">
         <table class="data-table">
           <thead>
@@ -27,18 +27,20 @@ import { FinanceService, Expense } from '../../../core/services/finance.service'
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let expense of expenses()">
-              <td>{{ expense.title }}</td>
-              <td>{{ expense.category }}</td>
-              <td class="amount text-danger">-\${{ expense.amount }}</td>
-              <td>{{ expense.date | date }}</td>
-              <td>{{ expense.approvedBy }}</td>
-            </tr>
+            @for (expense of expenses(); track expense) {
+              <tr>
+                <td>{{ expense.title }}</td>
+                <td>{{ expense.category }}</td>
+                <td class="amount text-danger">-\${{ expense.amount }}</td>
+                <td>{{ expense.date | date }}</td>
+                <td>{{ expense.approvedBy }}</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

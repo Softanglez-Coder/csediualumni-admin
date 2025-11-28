@@ -1,51 +1,59 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     template: `
     <div class="card">
       <h2 class="title">Sign In</h2>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
           <label for="email">Email</label>
-          <input 
-            id="email" 
-            type="email" 
-            formControlName="email" 
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
             placeholder="admin@example.com"
             [class.error]="isFieldInvalid('email')"
-          >
-          <div *ngIf="isFieldInvalid('email')" class="error-msg">
-            Valid email is required
-          </div>
+            >
+          @if (isFieldInvalid('email')) {
+            <div class="error-msg">
+              Valid email is required
+            </div>
+          }
         </div>
-
+    
         <div class="form-group">
           <label for="password">Password</label>
-          <input 
-            id="password" 
-            type="password" 
-            formControlName="password" 
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
             placeholder="••••••••"
             [class.error]="isFieldInvalid('password')"
-          >
-          <div *ngIf="isFieldInvalid('password')" class="error-msg">
-            Password is required
-          </div>
+            >
+          @if (isFieldInvalid('password')) {
+            <div class="error-msg">
+              Password is required
+            </div>
+          }
         </div>
-
+    
         <button type="submit" class="btn btn-primary w-full" [disabled]="loginForm.invalid || isLoading">
-          <span *ngIf="isLoading">Signing in...</span>
-          <span *ngIf="!isLoading">Sign In</span>
+          @if (isLoading) {
+            <span>Signing in...</span>
+          }
+          @if (!isLoading) {
+            <span>Sign In</span>
+          }
         </button>
       </form>
     </div>
-  `,
+    `,
     styles: [`
     .title {
       font-size: 1.25rem;

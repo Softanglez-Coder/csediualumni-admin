@@ -15,29 +15,33 @@ import { BlogService, BlogPost } from '../../../core/services/blog.service';
           <span>+</span> Create Post
         </a>
       </div>
-
+    
       <div class="grid-container">
-        <div class="card post-card" *ngFor="let post of posts()">
-          <div class="post-header">
-            <span class="status-badge" [ngClass]="post.status">{{ post.status | titlecase }}</span>
-            <div class="actions">
-              <a [routerLink]="['/blogs', post.id]" class="btn-icon">✏️</a>
-              <button class="btn-icon danger" (click)="deletePost(post)">🗑️</button>
+        @for (post of posts(); track post) {
+          <div class="card post-card">
+            <div class="post-header">
+              <span class="status-badge" [ngClass]="post.status">{{ post.status | titlecase }}</span>
+              <div class="actions">
+                <a [routerLink]="['/blogs', post.id]" class="btn-icon">✏️</a>
+                <button class="btn-icon danger" (click)="deletePost(post)">🗑️</button>
+              </div>
+            </div>
+            <h3 class="post-title">{{ post.title }}</h3>
+            <div class="post-meta">
+              <span>By {{ post.author }}</span>
+              <span>•</span>
+              <span>{{ post.date | date }}</span>
+            </div>
+            <div class="tags">
+              @for (tag of post.tags; track tag) {
+                <span class="tag">#{{ tag }}</span>
+              }
             </div>
           </div>
-          <h3 class="post-title">{{ post.title }}</h3>
-          <div class="post-meta">
-            <span>By {{ post.author }}</span>
-            <span>•</span>
-            <span>{{ post.date | date }}</span>
-          </div>
-          <div class="tags">
-            <span class="tag" *ngFor="let tag of post.tags">#{{ tag }}</span>
-          </div>
-        </div>
+        }
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

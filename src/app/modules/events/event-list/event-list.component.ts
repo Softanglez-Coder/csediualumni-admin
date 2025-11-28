@@ -15,29 +15,31 @@ import { EventService, Event } from '../../../core/services/event.service';
           <span>+</span> Create Event
         </a>
       </div>
-
+    
       <div class="events-grid">
-        <div class="card event-card" *ngFor="let event of events()">
-          <div class="event-header">
-            <span class="status-badge" [ngClass]="event.status">{{ event.status | titlecase }}</span>
-            <div class="actions">
-              <a [routerLink]="['/events', event.id]" class="btn-icon">✏️</a>
-              <button class="btn-icon danger" (click)="deleteEvent(event)">🗑️</button>
+        @for (event of events(); track event) {
+          <div class="card event-card">
+            <div class="event-header">
+              <span class="status-badge" [ngClass]="event.status">{{ event.status | titlecase }}</span>
+              <div class="actions">
+                <a [routerLink]="['/events', event.id]" class="btn-icon">✏️</a>
+                <button class="btn-icon danger" (click)="deleteEvent(event)">🗑️</button>
+              </div>
+            </div>
+            <h3 class="event-title">{{ event.title }}</h3>
+            <div class="event-details">
+              <div class="detail-item">
+                <span class="icon">📅</span>
+                <span>{{ event.date | date:'mediumDate' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="icon">📍</span>
+                <span>{{ event.location }}</span>
+              </div>
             </div>
           </div>
-          <h3 class="event-title">{{ event.title }}</h3>
-          <div class="event-details">
-            <div class="detail-item">
-              <span class="icon">📅</span>
-              <span>{{ event.date | date:'mediumDate' }}</span>
-            </div>
-            <div class="detail-item">
-              <span class="icon">📍</span>
-              <span>{{ event.location }}</span>
-            </div>
-          </div>
-        </div>
-        
+        }
+    
         <div class="card event-card add-card" routerLink="/events/new">
           <div class="add-content">
             <span class="plus-icon">+</span>
@@ -46,7 +48,7 @@ import { EventService, Event } from '../../../core/services/event.service';
         </div>
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

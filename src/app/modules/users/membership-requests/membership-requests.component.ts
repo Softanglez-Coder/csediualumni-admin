@@ -9,7 +9,7 @@ import { UserService, User } from '../../../core/services/user.service';
     template: `
     <div class="page-container">
       <h1 class="title">Membership Requests</h1>
-
+    
       <div class="card">
         <table class="data-table">
           <thead>
@@ -21,30 +21,34 @@ import { UserService, User } from '../../../core/services/user.service';
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let request of requests()">
-              <td>
-                <div class="user-cell">
-                  <div class="avatar-sm">{{ request.name.charAt(0) }}</div>
-                  <span>{{ request.name }}</span>
-                </div>
-              </td>
-              <td>{{ request.email }}</td>
-              <td>{{ request.joinedDate | date }}</td>
-              <td>
-                <div class="actions-cell">
-                  <button class="btn btn-sm btn-success" (click)="approve(request)">Approve</button>
-                  <button class="btn btn-sm btn-danger" (click)="reject(request)">Reject</button>
-                </div>
-              </td>
-            </tr>
-            <tr *ngIf="requests().length === 0">
-              <td colspan="4" class="empty-state">No pending requests</td>
-            </tr>
+            @for (request of requests(); track request) {
+              <tr>
+                <td>
+                  <div class="user-cell">
+                    <div class="avatar-sm">{{ request.name.charAt(0) }}</div>
+                    <span>{{ request.name }}</span>
+                  </div>
+                </td>
+                <td>{{ request.email }}</td>
+                <td>{{ request.joinedDate | date }}</td>
+                <td>
+                  <div class="actions-cell">
+                    <button class="btn btn-sm btn-success" (click)="approve(request)">Approve</button>
+                    <button class="btn btn-sm btn-danger" (click)="reject(request)">Reject</button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (requests().length === 0) {
+              <tr>
+                <td colspan="4" class="empty-state">No pending requests</td>
+              </tr>
+            }
           </tbody>
         </table>
       </div>
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       display: flex;

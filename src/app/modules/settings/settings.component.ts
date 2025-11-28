@@ -1,96 +1,98 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SettingsService, AppSettings, FeatureFlag } from '../../core/services/settings.service';
 
 @Component({
     selector: 'app-settings',
     standalone: true,
-    imports: [CommonModule, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
     template: `
     <div class="page-container">
       <h1 class="title">Settings</h1>
-
+    
       <div class="tabs">
-        <button 
-          class="tab-btn" 
+        <button
+          class="tab-btn"
           [class.active]="activeTab() === 'general'"
           (click)="activeTab.set('general')"
-        >
+          >
           General
         </button>
-        <button 
-          class="tab-btn" 
+        <button
+          class="tab-btn"
           [class.active]="activeTab() === 'features'"
           (click)="activeTab.set('features')"
-        >
+          >
           Feature Flags
         </button>
       </div>
-
-      <div class="tab-content" *ngIf="activeTab() === 'general'">
-        <div class="card">
-          <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
-            <div class="form-grid">
-              <div class="form-group">
-                <label>Site Name</label>
-                <input type="text" formControlName="siteName">
+    
+      @if (activeTab() === 'general') {
+        <div class="tab-content">
+          <div class="card">
+            <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Site Name</label>
+                  <input type="text" formControlName="siteName">
+                </div>
+                <div class="form-group">
+                  <label>Membership Fee</label>
+                  <input type="number" formControlName="membershipFee">
+                </div>
+                <div class="form-group">
+                  <label>Currency</label>
+                  <select formControlName="currency">
+                    <option value="BDT">BDT</option>
+                    <option value="USD">USD</option>
+                  </select>
+                </div>
+                <div class="form-group checkbox-group">
+                  <label>
+                    <input type="checkbox" formControlName="maintenanceMode">
+                    Maintenance Mode
+                  </label>
+                  <p class="help-text">Prevent users from accessing the site</p>
+                </div>
               </div>
-              
-              <div class="form-group">
-                <label>Membership Fee</label>
-                <input type="number" formControlName="membershipFee">
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary" [disabled]="settingsForm.invalid || isSaving">
+                  {{ isSaving ? 'Saving...' : 'Save Changes' }}
+                </button>
               </div>
-              
-              <div class="form-group">
-                <label>Currency</label>
-                <select formControlName="currency">
-                  <option value="BDT">BDT</option>
-                  <option value="USD">USD</option>
-                </select>
-              </div>
-              
-              <div class="form-group checkbox-group">
-                <label>
-                  <input type="checkbox" formControlName="maintenanceMode">
-                  Maintenance Mode
-                </label>
-                <p class="help-text">Prevent users from accessing the site</p>
-              </div>
-            </div>
-
-            <div class="form-actions">
-              <button type="submit" class="btn btn-primary" [disabled]="settingsForm.invalid || isSaving">
-                {{ isSaving ? 'Saving...' : 'Save Changes' }}
-              </button>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
-      </div>
-
-      <div class="tab-content" *ngIf="activeTab() === 'features'">
-        <div class="card">
-          <div class="feature-list">
-            <div class="feature-item" *ngFor="let flag of featureFlags()">
-              <div class="feature-info">
-                <h3>{{ flag.name }}</h3>
-                <p>{{ flag.description }}</p>
-              </div>
-              <div class="toggle-switch">
-                <input 
-                  type="checkbox" 
-                  [id]="flag.id" 
-                  [checked]="flag.enabled"
-                  (change)="toggleFeature(flag, $event)"
-                >
-                <label [for]="flag.id"></label>
-              </div>
+      }
+    
+      @if (activeTab() === 'features') {
+        <div class="tab-content">
+          <div class="card">
+            <div class="feature-list">
+              @for (flag of featureFlags(); track flag) {
+                <div class="feature-item">
+                  <div class="feature-info">
+                    <h3>{{ flag.name }}</h3>
+                    <p>{{ flag.description }}</p>
+                  </div>
+                  <div class="toggle-switch">
+                    <input
+                      type="checkbox"
+                      [id]="flag.id"
+                      [checked]="flag.enabled"
+                      (change)="toggleFeature(flag, $event)"
+                      >
+                    <label [for]="flag.id"></label>
+                  </div>
+                </div>
+              }
             </div>
           </div>
         </div>
-      </div>
+      }
     </div>
-  `,
+    `,
     styles: [`
     .page-container {
       max-width: 800px;
