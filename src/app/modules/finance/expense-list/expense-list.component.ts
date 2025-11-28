@@ -3,93 +3,55 @@ import { CommonModule } from '@angular/common';
 import { FinanceService, Expense } from '../../../core/services/finance.service';
 
 @Component({
-    selector: 'app-expense-list',
-    standalone: true,
-    imports: [CommonModule],
-    template: `
+  selector: 'app-expense-list',
+  standalone: true,
+  imports: [CommonModule],
+  template: `
     <div class="page-container">
-      <div class="page-header">
-        <h1 class="title">Expenses</h1>
-        <button class="btn btn-primary">
-          <span>+</span> Add Expense
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-[var(--text-color)]">Expenses</h1>
+        <button class="btn btn-primary flex items-center gap-2">
+          <i class="fas fa-plus"></i> Add Expense
         </button>
       </div>
     
-      <div class="card">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Category</th>
-              <th>Amount</th>
-              <th>Date</th>
-              <th>Approved By</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (expense of expenses(); track expense) {
+      <div class="card overflow-hidden p-0">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead class="bg-[var(--bg-color)] border-b border-[var(--border-color)]">
               <tr>
-                <td>{{ expense.title }}</td>
-                <td>{{ expense.category }}</td>
-                <td class="amount text-danger">-\${{ expense.amount }}</td>
-                <td>{{ expense.date | date }}</td>
-                <td>{{ expense.approvedBy }}</td>
+                <th class="p-4 font-semibold text-sm text-[var(--text-secondary)]">Title</th>
+                <th class="p-4 font-semibold text-sm text-[var(--text-secondary)]">Category</th>
+                <th class="p-4 font-semibold text-sm text-[var(--text-secondary)]">Amount</th>
+                <th class="p-4 font-semibold text-sm text-[var(--text-secondary)]">Date</th>
+                <th class="p-4 font-semibold text-sm text-[var(--text-secondary)]">Approved By</th>
               </tr>
-            }
-          </tbody>
-        </table>
+            </thead>
+            <tbody class="divide-y divide-[var(--border-color)]">
+              @for (expense of expenses(); track expense) {
+                <tr class="hover:bg-[var(--bg-color)] transition-colors">
+                  <td class="p-4 text-[var(--text-color)]">{{ expense.title }}</td>
+                  <td class="p-4 text-[var(--text-color)]">{{ expense.category }}</td>
+                  <td class="p-4 font-mono font-semibold text-red-500">-\${{ expense.amount }}</td>
+                  <td class="p-4 text-[var(--text-color)]">{{ expense.date | date }}</td>
+                  <td class="p-4 text-[var(--text-color)]">{{ expense.approvedBy }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    `,
-    styles: [`
-    .page-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-color);
-      }
-    }
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      
-      th, td {
-        padding: 1rem;
-        text-align: left;
-        border-bottom: 1px solid var(--border-color);
-      }
-      th {
-        font-weight: 600;
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-      }
-      td {
-        color: var(--text-color);
-        font-size: 0.875rem;
-      }
-    }
-    .amount {
-      font-family: monospace;
-      font-weight: 600;
-      &.text-danger { color: var(--danger-color); }
-    }
-  `]
+  `,
+  styles: []
 })
 export class ExpenseListComponent implements OnInit {
-    private financeService = inject(FinanceService);
-    expenses = signal<Expense[]>([]);
+  private financeService = inject(FinanceService);
+  expenses = signal<Expense[]>([]);
 
-    ngOnInit() {
-        this.financeService.getExpenses().subscribe(data => {
-            this.expenses.set(data);
-        });
-    }
+  ngOnInit() {
+    this.financeService.getExpenses().subscribe(data => {
+      this.expenses.set(data);
+    });
+  }
 }

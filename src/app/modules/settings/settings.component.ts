@@ -1,309 +1,147 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SettingsService, AppSettings, FeatureFlag } from '../../core/services/settings.service';
 
 @Component({
-    selector: 'app-settings',
-    standalone: true,
-    imports: [ReactiveFormsModule],
-    template: `
-    <div class="page-container">
-      <h1 class="title">Settings</h1>
+  selector: 'app-settings',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-2xl font-bold text-[var(--text-color)] mb-6">Settings</h1>
     
-      <div class="tabs">
+      <div class="flex gap-4 mb-6 border-b border-[var(--border-color)]">
         <button
-          class="tab-btn"
-          [class.active]="activeTab() === 'general'"
+          class="px-4 py-2 text-sm font-medium border-b-2 transition-colors duration-200"
+          [class.border-[var(--primary-color)]]="activeTab() === 'general'"
+          [class.text-[var(--primary-color)]]="activeTab() === 'general'"
+          [class.border-transparent]="activeTab() !== 'general'"
+          [class.text-[var(--text-secondary)]]="activeTab() !== 'general'"
+          [class.hover:text-[var(--text-color)]]="activeTab() !== 'general'"
           (click)="activeTab.set('general')"
-          >
+        >
           General
         </button>
         <button
-          class="tab-btn"
-          [class.active]="activeTab() === 'features'"
+          class="px-4 py-2 text-sm font-medium border-b-2 transition-colors duration-200"
+          [class.border-[var(--primary-color)]]="activeTab() === 'features'"
+          [class.text-[var(--primary-color)]]="activeTab() === 'features'"
+          [class.border-transparent]="activeTab() !== 'features'"
+          [class.text-[var(--text-secondary)]]="activeTab() !== 'features'"
+          [class.hover:text-[var(--text-color)]]="activeTab() !== 'features'"
           (click)="activeTab.set('features')"
-          >
+        >
           Feature Flags
         </button>
       </div>
     
       @if (activeTab() === 'general') {
-        <div class="tab-content">
-          <div class="card">
-            <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
-              <div class="form-grid">
-                <div class="form-group">
-                  <label>Site Name</label>
-                  <input type="text" formControlName="siteName">
+        <div class="card p-6">
+          <form [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+            <div class="grid gap-6 mb-6">
+              <div>
+                <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Site Name</label>
+                <input type="text" formControlName="siteName" class="input-field">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Membership Fee</label>
+                <input type="number" formControlName="membershipFee" class="input-field">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Currency</label>
+                <select formControlName="currency" class="input-field">
+                  <option value="BDT">BDT</option>
+                  <option value="USD">USD</option>
+                </select>
+              </div>
+              <div class="flex items-start gap-3">
+                <div class="flex items-center h-5">
+                  <input id="maintenanceMode" type="checkbox" formControlName="maintenanceMode" class="w-4 h-4 text-[var(--primary-color)] border-[var(--border-color)] rounded focus:ring-[var(--primary-color)]">
                 </div>
-                <div class="form-group">
-                  <label>Membership Fee</label>
-                  <input type="number" formControlName="membershipFee">
-                </div>
-                <div class="form-group">
-                  <label>Currency</label>
-                  <select formControlName="currency">
-                    <option value="BDT">BDT</option>
-                    <option value="USD">USD</option>
-                  </select>
-                </div>
-                <div class="form-group checkbox-group">
-                  <label>
-                    <input type="checkbox" formControlName="maintenanceMode">
-                    Maintenance Mode
-                  </label>
-                  <p class="help-text">Prevent users from accessing the site</p>
+                <div class="ml-2 text-sm">
+                  <label for="maintenanceMode" class="font-medium text-[var(--text-color)]">Maintenance Mode</label>
+                  <p class="text-[var(--text-secondary)]">Prevent users from accessing the site</p>
                 </div>
               </div>
-              <div class="form-actions">
-                <button type="submit" class="btn btn-primary" [disabled]="settingsForm.invalid || isSaving">
-                  {{ isSaving ? 'Saving...' : 'Save Changes' }}
-                </button>
-              </div>
-            </form>
-          </div>
+            </div>
+            <div class="flex justify-end pt-6 border-t border-[var(--border-color)]">
+              <button type="submit" class="btn btn-primary" [disabled]="settingsForm.invalid || isSaving">
+                {{ isSaving ? 'Saving...' : 'Save Changes' }}
+              </button>
+            </div>
+          </form>
         </div>
       }
     
       @if (activeTab() === 'features') {
-        <div class="tab-content">
-          <div class="card">
-            <div class="feature-list">
-              @for (flag of featureFlags(); track flag) {
-                <div class="feature-item">
-                  <div class="feature-info">
-                    <h3>{{ flag.name }}</h3>
-                    <p>{{ flag.description }}</p>
-                  </div>
-                  <div class="toggle-switch">
-                    <input
-                      type="checkbox"
-                      [id]="flag.id"
-                      [checked]="flag.enabled"
-                      (change)="toggleFeature(flag, $event)"
-                      >
-                    <label [for]="flag.id"></label>
-                  </div>
+        <div class="card p-6">
+          <div class="flex flex-col divide-y divide-[var(--border-color)]">
+            @for (flag of featureFlags(); track flag) {
+              <div class="flex justify-between items-center py-4 first:pt-0 last:pb-0">
+                <div>
+                  <h3 class="text-sm font-semibold text-[var(--text-color)]">{{ flag.name }}</h3>
+                  <p class="text-sm text-[var(--text-secondary)]">{{ flag.description }}</p>
                 </div>
-              }
-            </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" [checked]="flag.enabled" (change)="toggleFeature(flag, $event)" class="sr-only peer">
+                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[var(--primary-color)]"></div>
+                </label>
+              </div>
+            }
           </div>
         </div>
       }
     </div>
-    `,
-    styles: [`
-    .page-container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-color);
-      margin-bottom: 1.5rem;
-    }
-    .tabs {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-    }
-    .tab-btn {
-      background: none;
-      border: none;
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
-      
-      &:hover { color: var(--text-color); }
-      &.active {
-        color: var(--primary-color);
-        border-bottom-color: var(--primary-color);
-      }
-    }
-    .card {
-      padding: 2rem;
-    }
-    .form-grid {
-      display: grid;
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      
-      label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--text-secondary);
-      }
-      
-      input[type="text"], input[type="number"], select {
-        padding: 0.75rem;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        font-size: 1rem;
-        
-        &:focus {
-          outline: none;
-          border-color: var(--primary-color);
-        }
-      }
-    }
-    .checkbox-group {
-      flex-direction: row;
-      align-items: center;
-      flex-wrap: wrap;
-      label {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--text-color);
-        font-size: 1rem;
-        cursor: pointer;
-      }
-      .help-text {
-        width: 100%;
-        margin-left: 1.75rem;
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-      }
-    }
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border-color);
-    }
-    
-    .feature-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .feature-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 1.5rem;
-      border-bottom: 1px solid var(--border-color);
-      &:last-child { border-bottom: none; padding-bottom: 0; }
-    }
-    .feature-info {
-      h3 {
-        font-size: 1rem;
-        font-weight: 600;
-        color: var(--text-color);
-        margin-bottom: 0.25rem;
-      }
-      p {
-        font-size: 0.875rem;
-        color: var(--text-secondary);
-      }
-    }
-    
-    /* Toggle Switch */
-    .toggle-switch {
-      position: relative;
-      width: 50px;
-      height: 26px;
-      
-      input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-        
-        &:checked + label {
-          background-color: var(--primary-color);
-        }
-        &:checked + label:before {
-          transform: translateX(24px);
-        }
-      }
-      
-      label {
-        position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        transition: .4s;
-        border-radius: 34px;
-        
-        &:before {
-          position: absolute;
-          content: "";
-          height: 20px;
-          width: 20px;
-          left: 3px;
-          bottom: 3px;
-          background-color: white;
-          transition: .4s;
-          border-radius: 50%;
-        }
-      }
-    }
-  `]
+  `,
+  styles: []
 })
 export class SettingsComponent implements OnInit {
-    private settingsService = inject(SettingsService);
-    private fb = inject(FormBuilder);
+  private settingsService = inject(SettingsService);
+  private fb = inject(FormBuilder);
 
-    activeTab = signal<'general' | 'features'>('general');
-    featureFlags = signal<FeatureFlag[]>([]);
-    isSaving = false;
+  activeTab = signal<'general' | 'features'>('general');
+  featureFlags = signal<FeatureFlag[]>([]);
+  isSaving = false;
 
-    settingsForm = this.fb.group({
-        siteName: ['', Validators.required],
-        membershipFee: [0, Validators.required],
-        currency: ['BDT', Validators.required],
-        maintenanceMode: [false]
+  settingsForm = this.fb.group({
+    siteName: ['', Validators.required],
+    membershipFee: [0, Validators.required],
+    currency: ['BDT', Validators.required],
+    maintenanceMode: [false]
+  });
+
+  ngOnInit() {
+    this.loadSettings();
+    this.loadFeatureFlags();
+  }
+
+  loadSettings() {
+    this.settingsService.getSettings().subscribe((settings: AppSettings) => {
+      this.settingsForm.patchValue(settings);
     });
+  }
 
-    ngOnInit() {
-        this.loadSettings();
-        this.loadFeatureFlags();
-    }
+  loadFeatureFlags() {
+    this.settingsService.getFeatureFlags().subscribe((flags: FeatureFlag[]) => {
+      this.featureFlags.set(flags);
+    });
+  }
 
-    loadSettings() {
-        this.settingsService.getSettings().subscribe((settings: AppSettings) => {
-            this.settingsForm.patchValue(settings);
-        });
+  saveSettings() {
+    if (this.settingsForm.valid) {
+      this.isSaving = true;
+      this.settingsService.updateSettings(this.settingsForm.value as AppSettings).subscribe({
+        next: (settings: AppSettings) => {
+          this.isSaving = false;
+          // Show toast
+        },
+        error: () => this.isSaving = false
+      });
     }
+  }
 
-    loadFeatureFlags() {
-        this.settingsService.getFeatureFlags().subscribe((flags: FeatureFlag[]) => {
-            this.featureFlags.set(flags);
-        });
-    }
-
-    saveSettings() {
-        if (this.settingsForm.valid) {
-            this.isSaving = true;
-            this.settingsService.updateSettings(this.settingsForm.value as AppSettings).subscribe({
-                next: (settings: AppSettings) => {
-                    this.isSaving = false;
-                    // Show toast
-                },
-                error: () => this.isSaving = false
-            });
-        }
-    }
-
-    toggleFeature(flag: FeatureFlag, event: Event) {
-        const enabled = (event.target as HTMLInputElement).checked;
-        this.settingsService.updateFeatureFlag(flag.id, enabled).subscribe();
-    }
+  toggleFeature(flag: FeatureFlag, event: Event) {
+    const enabled = (event.target as HTMLInputElement).checked;
+    this.settingsService.updateFeatureFlag(flag.id, enabled).subscribe();
+  }
 }

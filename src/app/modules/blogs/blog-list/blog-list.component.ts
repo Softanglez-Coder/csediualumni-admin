@@ -4,142 +4,73 @@ import { RouterLink } from '@angular/router';
 import { BlogService, BlogPost } from '../../../core/services/blog.service';
 
 @Component({
-    selector: 'app-blog-list',
-    standalone: true,
-    imports: [CommonModule, RouterLink],
-    template: `
+  selector: 'app-blog-list',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
+  template: `
     <div class="page-container">
-      <div class="page-header">
-        <h1 class="title">Blogs Management</h1>
-        <a routerLink="/blogs/new" class="btn btn-primary">
-          <span>+</span> Create Post
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-[var(--text-color)]">Blogs Management</h1>
+        <a routerLink="/blogs/new" class="btn btn-primary flex items-center gap-2">
+          <i class="fas fa-plus"></i> Create Post
         </a>
       </div>
     
-      <div class="grid-container">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         @for (post of posts(); track post) {
-          <div class="card post-card">
-            <div class="post-header">
-              <span class="status-badge" [ngClass]="post.status">{{ post.status | titlecase }}</span>
-              <div class="actions">
-                <a [routerLink]="['/blogs', post.id]" class="btn-icon">✏️</a>
-                <button class="btn-icon danger" (click)="deletePost(post)">🗑️</button>
+          <div class="card hover:-translate-y-1 hover:shadow-lg transition-all duration-200">
+            <div class="flex justify-between items-start mb-4">
+              <span class="px-2 py-1 rounded-full text-xs font-bold uppercase" 
+                [ngClass]="{
+                  'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400': post.status === 'published',
+                  'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300': post.status === 'draft'
+                }">
+                {{ post.status | titlecase }}
+              </span>
+              <div class="flex gap-2">
+                <a [routerLink]="['/blogs', post.id]" class="btn-icon text-blue-500 hover:text-blue-600">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <button class="btn-icon text-red-500 hover:text-red-600" (click)="deletePost(post)">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
               </div>
             </div>
-            <h3 class="post-title">{{ post.title }}</h3>
-            <div class="post-meta">
-              <span>By {{ post.author }}</span>
+            <h3 class="text-xl font-semibold text-[var(--text-color)] mb-3 line-clamp-2">{{ post.title }}</h3>
+            <div class="flex items-center gap-2 text-sm text-[var(--text-secondary)] mb-4">
+              <span class="font-medium text-[var(--text-color)]">By {{ post.author }}</span>
               <span>•</span>
               <span>{{ post.date | date }}</span>
             </div>
-            <div class="tags">
+            <div class="flex flex-wrap gap-2 mt-auto">
               @for (tag of post.tags; track tag) {
-                <span class="tag">#{{ tag }}</span>
+                <span class="px-2 py-1 bg-[var(--bg-color)] text-[var(--primary-color)] rounded text-xs font-medium">#{{ tag }}</span>
               }
             </div>
           </div>
         }
       </div>
     </div>
-    `,
-    styles: [`
-    .page-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      .title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--text-color);
-      }
-    }
-    .grid-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.5rem;
-    }
-    .post-card {
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .post-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .status-badge {
-      padding: 0.25rem 0.75rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      &.published { background-color: #d1fae5; color: #059669; }
-      &.draft { background-color: #f3f4f6; color: #4b5563; }
-    }
-    .post-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      color: var(--text-color);
-      margin: 0;
-    }
-    .post-meta {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      display: flex;
-      gap: 0.5rem;
-    }
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-    .tag {
-      background-color: var(--bg-color);
-      color: var(--primary-color);
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 500;
-    }
-    .actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-    .btn-icon {
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1rem;
-      opacity: 0.6;
-      transition: opacity 0.2s;
-      text-decoration: none;
-      &:hover { opacity: 1; }
-    }
-  `]
+  `,
+  styles: []
 })
 export class BlogListComponent implements OnInit {
-    private blogService = inject(BlogService);
-    posts = signal<BlogPost[]>([]);
+  private blogService = inject(BlogService);
+  posts = signal<BlogPost[]>([]);
 
-    ngOnInit() {
-        this.loadPosts();
-    }
+  ngOnInit() {
+    this.loadPosts();
+  }
 
-    loadPosts() {
-        this.blogService.getPosts().subscribe(data => {
-            this.posts.set(data);
-        });
-    }
+  loadPosts() {
+    this.blogService.getPosts().subscribe(data => {
+      this.posts.set(data);
+    });
+  }
 
-    deletePost(post: BlogPost) {
-        if (confirm(`Delete post "${post.title}"?`)) {
-            this.posts.update(list => list.filter(p => p.id !== post.id));
-        }
+  deletePost(post: BlogPost) {
+    if (confirm(`Delete post "${post.title}"?`)) {
+      this.posts.update(list => list.filter(p => p.id !== post.id));
     }
+  }
 }

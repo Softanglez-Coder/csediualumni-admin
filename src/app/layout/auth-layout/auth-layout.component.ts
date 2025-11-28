@@ -6,42 +6,16 @@ import { RouterOutlet } from '@angular/router';
     standalone: true,
     imports: [RouterOutlet],
     template: `
-    <div class="auth-container">
-      <div class="auth-content">
-        <div class="brand">
-          <h1>CSE DIU Alumni</h1>
-          <p>Admin Portal</p>
+    <div class="min-h-screen flex items-center justify-center bg-[var(--bg-color)] p-4">
+      <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-[var(--primary-color)] mb-2">CSE DIU Alumni</h1>
+          <p class="text-[var(--text-secondary)]">Admin Portal</p>
         </div>
         <router-outlet></router-outlet>
       </div>
     </div>
   `,
-    styles: [`
-    .auth-container {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background-color: var(--bg-color);
-      padding: 1rem;
-    }
-    .auth-content {
-      width: 100%;
-      max-width: 400px;
-    }
-    .brand {
-      text-align: center;
-      margin-bottom: 2rem;
-      h1 {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-      }
-      p {
-        color: var(--text-secondary);
-      }
-    }
-  `]
+    styles: []
 })
 export class AuthLayoutComponent { }

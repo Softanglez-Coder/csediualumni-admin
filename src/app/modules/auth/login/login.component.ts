@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -9,40 +8,42 @@ import { AuthService } from '../../../core/services/auth.service';
     imports: [ReactiveFormsModule],
     template: `
     <div class="card">
-      <h2 class="title">Sign In</h2>
+      <h2 class="text-xl font-semibold mb-6 text-[var(--text-color)]">Sign In</h2>
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
+        <div class="mb-4">
+          <label for="email" class="block mb-2 text-sm font-medium text-[var(--text-color)]">Email</label>
+          <input 
+            id="email" 
+            type="email" 
+            formControlName="email" 
             placeholder="admin@example.com"
-            [class.error]="isFieldInvalid('email')"
-            >
+            class="input-field"
+            [class.border-red-500]="isFieldInvalid('email')"
+          >
           @if (isFieldInvalid('email')) {
-            <div class="error-msg">
+            <div class="text-xs text-red-500 mt-1">
               Valid email is required
             </div>
           }
         </div>
-    
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            formControlName="password"
+
+        <div class="mb-6">
+          <label for="password" class="block mb-2 text-sm font-medium text-[var(--text-color)]">Password</label>
+          <input 
+            id="password" 
+            type="password" 
+            formControlName="password" 
             placeholder="••••••••"
-            [class.error]="isFieldInvalid('password')"
-            >
+            class="input-field"
+            [class.border-red-500]="isFieldInvalid('password')"
+          >
           @if (isFieldInvalid('password')) {
-            <div class="error-msg">
+            <div class="text-xs text-red-500 mt-1">
               Password is required
             </div>
           }
         </div>
-    
+
         <button type="submit" class="btn btn-primary w-full" [disabled]="loginForm.invalid || isLoading">
           @if (isLoading) {
             <span>Signing in...</span>
@@ -53,52 +54,8 @@ import { AuthService } from '../../../core/services/auth.service';
         </button>
       </form>
     </div>
-    `,
-    styles: [`
-    .title {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: var(--text-color);
-    }
-    .form-group {
-      margin-bottom: 1rem;
-      label {
-        display: block;
-        margin-bottom: 0.5rem;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--text-color);
-      }
-      input {
-        width: 100%;
-        padding: 0.5rem 0.75rem;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        transition: border-color 0.2s;
-        
-        &:focus {
-          outline: none;
-          border-color: var(--primary-color);
-          box-shadow: 0 0 0 2px var(--primary-color-alpha, rgba(79, 70, 229, 0.1));
-        }
-        
-        &.error {
-          border-color: var(--danger-color);
-        }
-      }
-    }
-    .error-msg {
-      font-size: 0.75rem;
-      color: var(--danger-color);
-      margin-top: 0.25rem;
-    }
-    .w-full {
-      width: 100%;
-    }
-  `]
+  `,
+    styles: []
 })
 export class LoginComponent {
     private fb = inject(FormBuilder);
@@ -128,7 +85,6 @@ export class LoginComponent {
                 error: (err) => {
                     console.error('Login failed', err);
                     this.isLoading = false;
-                    // Show error toast/message
                 }
             });
         } else {

@@ -1,56 +1,55 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
-
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { EventService, Event } from '../../../core/services/event.service';
 
 @Component({
-    selector: 'app-event-detail',
-    standalone: true,
-    imports: [ReactiveFormsModule],
-    template: `
-    <div class="page-container">
-      <div class="page-header">
-        <div class="header-left">
-          <button class="btn btn-outline" (click)="goBack()">← Back</button>
-          <h1 class="title">{{ isNew() ? 'Create Event' : 'Edit Event' }}</h1>
-        </div>
+  selector: 'app-event-detail',
+  standalone: true,
+  imports: [ReactiveFormsModule],
+  template: `
+    <div class="max-w-3xl mx-auto">
+      <div class="flex items-center gap-4 mb-6">
+        <button class="btn btn-outline flex items-center gap-2" (click)="goBack()">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <h1 class="text-2xl font-bold text-[var(--text-color)]">{{ isNew() ? 'Create Event' : 'Edit Event' }}</h1>
       </div>
 
-      <div class="card detail-card">
+      <div class="card p-6">
         <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
-          <div class="form-grid">
-            <div class="form-group full-width">
-              <label>Event Title</label>
-              <input type="text" formControlName="title" placeholder="e.g. Annual Alumni Meetup">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Event Title</label>
+              <input type="text" formControlName="title" placeholder="e.g. Annual Alumni Meetup" class="input-field">
             </div>
             
-            <div class="form-group">
-              <label>Date</label>
-              <input type="date" formControlName="date">
+            <div>
+              <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Date</label>
+              <input type="date" formControlName="date" class="input-field">
             </div>
             
-            <div class="form-group">
-              <label>Location</label>
-              <input type="text" formControlName="location" placeholder="e.g. Dhaka or Online">
+            <div>
+              <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Location</label>
+              <input type="text" formControlName="location" placeholder="e.g. Dhaka or Online" class="input-field">
             </div>
             
-            <div class="form-group">
-              <label>Status</label>
-              <select formControlName="status">
+            <div>
+              <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Status</label>
+              <select formControlName="status" class="input-field">
                 <option value="upcoming">Upcoming</option>
                 <option value="completed">Completed</option>
                 <option value="cancelled">Cancelled</option>
               </select>
             </div>
 
-            <div class="form-group full-width">
-              <label>Description</label>
-              <textarea formControlName="description" rows="4" placeholder="Event details..."></textarea>
+            <div class="md:col-span-2">
+              <label class="block text-sm font-medium text-[var(--text-secondary)] mb-2">Description</label>
+              <textarea formControlName="description" rows="4" placeholder="Event details..." class="input-field"></textarea>
             </div>
           </div>
 
-          <div class="form-actions">
+          <div class="flex justify-end gap-4 pt-6 border-t border-[var(--border-color)]">
             <button type="button" class="btn btn-outline" (click)="goBack()">Cancel</button>
             <button type="submit" class="btn btn-primary" [disabled]="eventForm.invalid || isSaving">
               {{ isSaving ? 'Saving...' : (isNew() ? 'Create Event' : 'Update Event') }}
@@ -60,124 +59,61 @@ import { EventService, Event } from '../../../core/services/event.service';
       </div>
     </div>
   `,
-    styles: [`
-    .page-container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .page-header {
-      margin-bottom: 2rem;
-    }
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-color);
-    }
-    .detail-card {
-      padding: 2rem;
-    }
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-    .full-width {
-      grid-column: 1 / -1;
-    }
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      
-      label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: var(--text-secondary);
-      }
-      
-      input, select, textarea {
-        padding: 0.75rem;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        background-color: var(--bg-color);
-        color: var(--text-color);
-        font-size: 1rem;
-        font-family: inherit;
-        
-        &:focus {
-          outline: none;
-          border-color: var(--primary-color);
-        }
-      }
-    }
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 1rem;
-      padding-top: 1.5rem;
-      border-top: 1px solid var(--border-color);
-    }
-  `]
+  styles: []
 })
 export class EventDetailComponent implements OnInit {
-    private route = inject(ActivatedRoute);
-    private router = inject(Router);
-    private eventService = inject(EventService);
-    private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private eventService = inject(EventService);
+  private fb = inject(FormBuilder);
 
-    isNew = signal(true);
-    eventId: number | null = null;
-    isSaving = false;
+  isNew = signal(true);
+  eventId: number | null = null;
+  isSaving = false;
 
-    eventForm = this.fb.group({
-        title: ['', Validators.required],
-        date: ['', Validators.required],
-        location: ['', Validators.required],
-        status: ['upcoming', Validators.required],
-        description: ['']
+  eventForm = this.fb.group({
+    title: ['', Validators.required],
+    date: ['', Validators.required],
+    location: ['', Validators.required],
+    status: ['upcoming', Validators.required],
+    description: ['']
+  });
+
+  ngOnInit() {
+    const idParam = this.route.snapshot.paramMap.get('id');
+    if (idParam && idParam !== 'new') {
+      this.isNew.set(false);
+      this.eventId = Number(idParam);
+      this.loadEvent(this.eventId);
+    }
+  }
+
+  loadEvent(id: number) {
+    this.eventService.getEventById(id).subscribe(event => {
+      this.eventForm.patchValue(event);
     });
+  }
 
-    ngOnInit() {
-        const idParam = this.route.snapshot.paramMap.get('id');
-        if (idParam && idParam !== 'new') {
-            this.isNew.set(false);
-            this.eventId = Number(idParam);
-            this.loadEvent(this.eventId);
-        }
-    }
+  onSubmit() {
+    if (this.eventForm.valid) {
+      this.isSaving = true;
+      const eventData = this.eventForm.value as any;
 
-    loadEvent(id: number) {
-        this.eventService.getEventById(id).subscribe(event => {
-            this.eventForm.patchValue(event);
+      if (this.isNew()) {
+        this.eventService.createEvent(eventData).subscribe({
+          next: () => this.goBack(),
+          error: () => this.isSaving = false
         });
+      } else {
+        this.eventService.updateEvent(this.eventId!, eventData).subscribe({
+          next: () => this.goBack(),
+          error: () => this.isSaving = false
+        });
+      }
     }
+  }
 
-    onSubmit() {
-        if (this.eventForm.valid) {
-            this.isSaving = true;
-            const eventData = this.eventForm.value as any;
-
-            if (this.isNew()) {
-                this.eventService.createEvent(eventData).subscribe({
-                    next: () => this.goBack(),
-                    error: () => this.isSaving = false
-                });
-            } else {
-                this.eventService.updateEvent(this.eventId!, eventData).subscribe({
-                    next: () => this.goBack(),
-                    error: () => this.isSaving = false
-                });
-            }
-        }
-    }
-
-    goBack() {
-        this.router.navigate(['/events']);
-    }
+  goBack() {
+    this.router.navigate(['/events']);
+  }
 }

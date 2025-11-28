@@ -4,36 +4,20 @@ import { SidebarComponent } from '../../shared/components/sidebar/sidebar.compon
 import { HeaderComponent } from '../../shared/components/header/header.component';
 
 @Component({
-    selector: 'app-main-layout',
-    standalone: true,
-    imports: [RouterOutlet, SidebarComponent, HeaderComponent],
-    template: `
-    <div class="layout">
+  selector: 'app-main-layout',
+  standalone: true,
+  imports: [RouterOutlet, SidebarComponent, HeaderComponent],
+  template: `
+    <div class="flex min-h-screen bg-[var(--bg-color)]">
       <app-sidebar></app-sidebar>
-      <div class="main-content">
+      <div class="flex-1 flex flex-col ml-64 transition-all duration-200">
         <app-header></app-header>
-        <div class="content-wrapper">
+        <main class="flex-1 p-6 mt-16">
           <router-outlet></router-outlet>
-        </div>
+        </main>
       </div>
     </div>
   `,
-    styles: [`
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
-    .main-content {
-      flex: 1;
-      margin-left: 250px; /* Sidebar width */
-      display: flex;
-      flex-direction: column;
-      background-color: var(--bg-color);
-    }
-    .content-wrapper {
-      padding: 1.5rem;
-      flex: 1;
-    }
-  `]
+  styles: []
 })
 export class MainLayoutComponent { }
