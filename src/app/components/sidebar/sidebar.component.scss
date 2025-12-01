@@ -1,0 +1,74 @@
+.sidebar {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  bottom: 0;
+  width: 260px;
+  background: #1e293b;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  z-index: 900;
+  overflow-y: auto;
+}
+
+.nav-menu {
+  padding: 24px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  color: #94a3b8;
+  text-decoration: none;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #e2e8f0;
+  }
+
+  &.active {
+    background: rgba(139, 92, 246, 0.1);
+    color: #a78bfa;
+    border-left-color: #8b5cf6;
+  }
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+
+  :deep(svg) {
+    width: 100%;
+    height: 100%;
+    stroke: currentColor;
+  }
+}
+
+.label {
+  flex: 1;
+}
+
+/* Scrollbar styling */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: #475569;
+  border-radius: 3px;
+
+  &:hover {
+    background: #64748b;
+  }
+}

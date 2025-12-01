@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-auth-callback',
+  standalone: true,
+  imports: [],
   template: `
     <div class="min-h-screen flex items-center justify-center bg-gray-50">
       <div class="text-center">
@@ -14,19 +16,19 @@ import { AuthService } from '../../services/auth.service';
       </div>
     </div>
   `,
-  imports: [],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AuthCallbackComponent implements OnInit {
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService
-  ) {
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
+
+  constructor() {
     console.log('AuthCallbackComponent - constructor called');
     console.log('Current URL:', window.location.href);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     console.log('AuthCallbackComponent - ngOnInit called');
     this.route.queryParams.subscribe((params) => {
       console.log('Raw queryParams:', params);

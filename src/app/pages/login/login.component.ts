@@ -1,29 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule],
+  standalone: true,
+  imports: [],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent implements OnInit {
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Check if already authenticated
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/dashboard']);
     }
   }
 
-  loginWithGoogle() {
+  protected onLoginWithGoogle(): void {
     this.authService.loginWithGoogle();
   }
 }

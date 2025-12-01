@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 export interface User {
   id: string;
@@ -22,49 +21,46 @@ export interface AuthResponse {
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/auth';
-  private currentUserSubject = new BehaviorSubject<User | null>(null);
-  public currentUser$ = this.currentUserSubject.asObservable();
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
 
-  constructor(private http: HttpClient, private router: Router) {
+  private readonly apiUrl = 'http://localhost:3000/auth';
+  private readonly currentUserSignal = signal<User | null>(null);
+
+  public readonly currentUser = this.currentUserSignal.asReadonly();
+  public readonly isAuthenticated = computed(() => !!this.currentUserSignal());
+
+  constructor() {
     this.loadUserFromStorage();
   }
 
-  private loadUserFromStorage() {
+  private loadUserFromStorage(): void {
     const token = localStorage.getItem('access_token');
     const user = localStorage.getItem('user');
     if (token && user) {
-      this.currentUserSubject.next(JSON.parse(user));
+      this.currentUserSignal.set(JSON.parse(user));
     }
   }
 
-  loginWithGoogle() {
+  loginWithGoogle(): void {
     window.location.href = `${this.apiUrl}/google`;
   }
 
-  handleAuthCallback(token: string, user: User) {
+  handleAuthCallback(token: string, user: User): void {
     localStorage.setItem('access_token', token);
     localStorage.setItem('user', JSON.stringify(user));
-    this.currentUserSubject.next(user);
+    this.currentUserSignal.set(user);
   }
 
-  logout() {
+  logout(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
-    this.currentUserSubject.next(null);
+    this.currentUserSignal.set(null);
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
     return localStorage.getItem('access_token');
-  }
-
-  isAuthenticated(): boolean {
-    return !!this.getToken();
-  }
-
-  getCurrentUser(): User | null {
-    return this.currentUserSubject.value;
   }
 
   getProfile(): Observable<User> {
