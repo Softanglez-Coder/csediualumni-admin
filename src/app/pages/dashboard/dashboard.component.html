@@ -4,23 +4,23 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
       <h1 class="text-2xl font-bold text-gray-900">Admin Dashboard</h1>
       @if (currentUser(); as user) {
-      <div class="flex items-center gap-4">
-        <div class="flex items-center gap-3">
-          @if (user.avatar) {
-          <img [src]="user.avatar" [alt]="user.firstName" class="w-10 h-10 rounded-full" />
-          }
-          <div class="text-sm">
-            <p class="font-medium text-gray-900">{{ user.firstName }} {{ user.lastName }}</p>
-            <p class="text-gray-500">{{ user.email }}</p>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3">
+            @if (user.avatar) {
+              <img [src]="user.avatar" [alt]="user.firstName" class="w-10 h-10 rounded-full" />
+            }
+            <div class="text-sm">
+              <p class="font-medium text-gray-900">{{ user.firstName }} {{ user.lastName }}</p>
+              <p class="text-gray-500">{{ user.email }}</p>
+            </div>
           </div>
+          <button
+            (click)="onLogout()"
+            class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            Logout
+          </button>
         </div>
-        <button
-          (click)="onLogout()"
-          class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-        >
-          Logout
-        </button>
-      </div>
       }
     </div>
   </header>

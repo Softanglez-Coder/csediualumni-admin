@@ -106,11 +106,11 @@ export class CommitteeService {
   updateDesignation(
     committeeId: string,
     designationId: string,
-    data: Partial<CreateDesignationDto>
+    data: Partial<CreateDesignationDto>,
   ): Observable<Committee> {
     return this.http.put<Committee>(
       `${this.apiUrl}/${committeeId}/designations/${designationId}`,
-      data
+      data,
     );
   }
 

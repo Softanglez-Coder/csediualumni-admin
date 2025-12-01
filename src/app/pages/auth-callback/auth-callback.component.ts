@@ -50,7 +50,7 @@ export class AuthCallbackComponent implements OnInit {
             console.log('Auth callback - navigating to dashboard');
             this.router.navigate(['/dashboard']).then(
               (success) => console.log('Navigation successful:', success),
-              (error) => console.error('Navigation failed:', error)
+              (error) => console.error('Navigation failed:', error),
             );
           }, 100);
         } catch (error) {

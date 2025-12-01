@@ -1,61 +1,61 @@
-@use "tailwindcss";
+@use 'tailwindcss';
 
 :root {
-    --primary-color: #4f46e5;
-    --secondary-color: #10b981;
-    --bg-color: #f3f4f6;
-    --surface-color: #ffffff;
-    --text-color: #111827;
-    --text-secondary: #6b7280;
-    --border-color: #e5e7eb;
+  --primary-color: #4f46e5;
+  --secondary-color: #10b981;
+  --bg-color: #f3f4f6;
+  --surface-color: #ffffff;
+  --text-color: #111827;
+  --text-secondary: #6b7280;
+  --border-color: #e5e7eb;
 }
 
 [data-theme='dark'] {
-    --primary-color: #6366f1;
-    --bg-color: #111827;
-    --surface-color: #1f2937;
-    --text-color: #f9fafb;
-    --text-secondary: #9ca3af;
-    --border-color: #374151;
+  --primary-color: #6366f1;
+  --bg-color: #111827;
+  --surface-color: #1f2937;
+  --text-color: #f9fafb;
+  --text-secondary: #9ca3af;
+  --border-color: #374151;
 }
 
 body {
-    @apply bg-[var(--bg-color)] text-[var(--text-color)] transition-colors duration-200;
+  @apply bg-[var(--bg-color)] text-[var(--text-color)] transition-colors duration-200;
 }
 
 /* Custom Utilities */
 .card {
-    @apply bg-[var(--surface-color)] rounded-xl shadow-md p-6 border border-[var(--border-color)];
+  @apply bg-[var(--surface-color)] rounded-xl shadow-md p-6 border border-[var(--border-color)];
 }
 
 .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer;
+  @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer;
 }
 
 .btn-primary {
-    @apply bg-[var(--primary-color)] text-white hover:opacity-90;
+  @apply bg-[var(--primary-color)] text-white hover:opacity-90;
 }
 
 .btn-outline {
-    @apply bg-transparent border border-[var(--border-color)] text-[var(--text-color)] hover:bg-[var(--bg-color)];
+  @apply bg-transparent border border-[var(--border-color)] text-[var(--text-color)] hover:bg-[var(--bg-color)];
 }
 
 .btn-icon {
-    @apply p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-[var(--text-color)];
+  @apply p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-[var(--text-color)];
 }
 
 .input-field {
-    @apply w-full px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--bg-color)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)];
+  @apply w-full px-4 py-2 rounded-lg border border-[var(--border-color)] bg-[var(--bg-color)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[var(--primary-color)];
 }
 
 .page-container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6;
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col gap-6;
 }
 
 .page-header {
-    @apply flex justify-between items-center mb-6;
+  @apply flex justify-between items-center mb-6;
 }
 
 .page-title {
-    @apply text-2xl font-bold text-[var(--text-color)];
+  @apply text-2xl font-bold text-[var(--text-color)];
 }

@@ -77,7 +77,7 @@ export class AdminCommitteesComponent implements OnInit {
     this.committeeService.toggleCurrentCommittee(committee._id).subscribe({
       next: (updated) => {
         this.committees.update((list) =>
-          list.map((c) => (c._id === updated._id ? updated : { ...c, isCurrent: false }))
+          list.map((c) => (c._id === updated._id ? updated : { ...c, isCurrent: false })),
         );
       },
       error: (error) => {

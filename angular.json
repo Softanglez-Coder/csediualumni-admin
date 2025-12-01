@@ -26,10 +26,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/tailwind.css",
-              "src/styles.scss"
-            ]
+            "styles": ["src/tailwind.css", "src/styles.scss"]
           },
           "configurations": {
             "production": {
@@ -81,9 +78,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/styles.scss"
-            ]
+            "styles": ["src/styles.scss"]
           }
         }
       }
