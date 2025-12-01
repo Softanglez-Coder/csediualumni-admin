@@ -58,7 +58,7 @@ export interface CreateDesignationDto {
 }
 
 export interface AddCommitteeMemberDto {
-  userId: string;
+  email: string;
   designationId: string;
 }
 

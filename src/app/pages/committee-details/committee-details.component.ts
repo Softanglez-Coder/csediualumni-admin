@@ -276,16 +276,16 @@ const AVAILABLE_ROLES = [
 
         <form (ngSubmit)="addMember()" class="space-y-4">
           <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">User ID</label>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">User Email</label>
             <input
-              type="text"
-              [(ngModel)]="newMember.userId"
-              name="userId"
+              type="email"
+              [(ngModel)]="newMember.email"
+              name="email"
               required
               class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              placeholder="Enter user MongoDB ID"
+              placeholder="Enter user email address"
             />
-            <p class="text-xs text-gray-500 mt-1">You can get user IDs from the Users page</p>
+            <p class="text-xs text-gray-500 mt-1">Enter the email of the user you want to add</p>
           </div>
 
           <div>
@@ -344,7 +344,7 @@ export class CommitteeDetailsComponent implements OnInit {
   };
 
   newMember: AddCommitteeMemberDto = {
-    userId: '',
+    email: '',
     designationId: '',
   };
 
@@ -433,7 +433,7 @@ export class CommitteeDetailsComponent implements OnInit {
   }
 
   addMember(): void {
-    if (!this.newMember.userId || !this.newMember.designationId) {
+    if (!this.newMember.email || !this.newMember.designationId) {
       alert('Please fill in all fields');
       return;
     }
@@ -512,7 +512,7 @@ export class CommitteeDetailsComponent implements OnInit {
 
   resetMemberForm(): void {
     this.newMember = {
-      userId: '',
+      email: '',
       designationId: '',
     };
   }
