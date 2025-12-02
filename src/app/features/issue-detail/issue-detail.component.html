@@ -1,0 +1,177 @@
+<div class="issue-detail-container">
+  @if (isLoading) {
+  <div class="loading">
+    <i class="fas fa-spinner fa-spin"></i>
+    <p>Loading issue...</p>
+  </div>
+  } @else if (issue) {
+  <!-- Header -->
+  <div class="header">
+    <div class="breadcrumb">
+      <a routerLink="/issues">
+        <i class="fas fa-arrow-left"></i>
+        Back to Issues
+      </a>
+    </div>
+
+    <div class="header-content">
+      <div class="header-info">
+        <span class="issue-status" [ngClass]="getStatusClass(issue.status)">
+          <i class="fas" [ngClass]="getStatusIcon(issue.status)"></i>
+          {{ getStatusLabel(issue.status) }}
+        </span>
+        <h1 class="issue-title">{{ issue.subject }}</h1>
+        <div class="issue-meta">
+          <span>
+            <i class="fas fa-clock"></i>
+            Created {{ formatDate(issue.createdAt) }}
+          </span>
+          @if (issue.resolvedAt) {
+          <span>
+            <i class="fas fa-check"></i>
+            Resolved {{ formatDate(issue.resolvedAt) }}
+          </span>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Left Column: Issue Details -->
+    <div class="left-column">
+      <!-- Contact Information -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-user"></i>
+          <h2>Contact Information</h2>
+        </div>
+        <div class="card-content">
+          <div class="info-row">
+            <div class="info-label">
+              <i class="fas fa-user"></i>
+              Name
+            </div>
+            <div class="info-value">{{ issue.name }}</div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">
+              <i class="fas fa-envelope"></i>
+              Email
+            </div>
+            <div class="info-value">
+              <a [href]="'mailto:' + issue.email">{{ issue.email }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Message -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-message"></i>
+          <h2>Message</h2>
+        </div>
+        <div class="card-content">
+          <p class="message-text">{{ issue.message }}</p>
+        </div>
+      </div>
+
+      <!-- Internal Notes -->
+      @if (issue.notes) {
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-note-sticky"></i>
+          <h2>Internal Notes</h2>
+        </div>
+        <div class="card-content">
+          <p class="notes-text">{{ issue.notes }}</p>
+        </div>
+      </div>
+      }
+    </div>
+
+    <!-- Right Column: Actions -->
+    <div class="right-column">
+      <!-- Update Status -->
+      <div class="card">
+        <div class="card-header">
+          <i class="fas fa-cog"></i>
+          <h2>Manage Issue</h2>
+        </div>
+        <div class="card-content">
+          <form [formGroup]="updateForm" (ngSubmit)="updateStatus()" class="update-form">
+            <div class="form-group">
+              <label for="status">Status</label>
+              <select id="status" formControlName="status" class="form-select">
+                <option [value]="IssueStatus.OPEN">Open</option>
+                <option [value]="IssueStatus.IN_PROGRESS">In Progress</option>
+                <option [value]="IssueStatus.RESOLVED">Resolved</option>
+                <option [value]="IssueStatus.WONT_RESOLVE">Won't Resolve</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">Internal Notes</label>
+              <textarea
+                id="notes"
+                formControlName="notes"
+                class="form-textarea"
+                rows="4"
+                placeholder="Add notes for your team..."
+              >
+              </textarea>
+            </div>
+
+            <button
+              type="submit"
+              class="btn btn-primary"
+              [disabled]="updateForm.invalid || isUpdating"
+            >
+              @if (isUpdating) {
+              <i class="fas fa-spinner fa-spin"></i>
+              <span>Updating...</span>
+              } @else {
+              <i class="fas fa-save"></i>
+              <span>Update Issue</span>
+              }
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Delete Issue -->
+      <div class="card danger-card">
+        <div class="card-header">
+          <i class="fas fa-trash"></i>
+          <h2>Danger Zone</h2>
+        </div>
+        <div class="card-content">
+          @if (!showDeleteConfirm) {
+          <p class="danger-text">
+            Once you delete this issue, there is no going back. Please be certain.
+          </p>
+          <button type="button" class="btn btn-danger" (click)="showDeleteConfirm = true">
+            <i class="fas fa-trash"></i>
+            Delete Issue
+          </button>
+          } @else {
+          <p class="danger-text"><strong>Are you sure?</strong> This action cannot be undone.</p>
+          <div class="button-group">
+            <button type="button" class="btn btn-danger" (click)="deleteIssue()">
+              <i class="fas fa-check"></i>
+              Yes, Delete
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="showDeleteConfirm = false">
+              <i class="fas fa-times"></i>
+              Cancel
+            </button>
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

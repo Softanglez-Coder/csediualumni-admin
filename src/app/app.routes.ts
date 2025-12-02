@@ -6,8 +6,23 @@ export const routes: Routes = [
     path: '',
     canActivate: [adminGuard],
     children: [
-      // Add your admin routes here
-      // All child routes will be protected by the admin guard
+      {
+        path: '',
+        redirectTo: 'issues',
+        pathMatch: 'full',
+      },
+      {
+        path: 'issues',
+        loadComponent: () =>
+          import('./features/issues-list/issues-list.component').then((m) => m.IssuesListComponent),
+      },
+      {
+        path: 'issues/:id',
+        loadComponent: () =>
+          import('./features/issue-detail/issue-detail.component').then(
+            (m) => m.IssueDetailComponent
+          ),
+      },
     ],
   },
 ];
