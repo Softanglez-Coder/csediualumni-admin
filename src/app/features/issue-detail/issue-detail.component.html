@@ -55,51 +55,56 @@
       <!-- Left Column: Issue Details -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Contact Information -->
-        <div class="card">
-          <div class="card-header">
-            <i class="fas fa-user"></i>
-            <h2>Contact Information</h2>
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div class="border-b border-gray-200 px-4 py-3">
+            <h2 class="text-sm font-semibold text-gray-900 flex items-center gap-2">
+              <i class="fas fa-user text-gray-400"></i>
+              Contact Information
+            </h2>
           </div>
-          <div class="card-content">
-            <div class="info-row">
-              <div class="info-label">
-                <i class="fas fa-user"></i>
-                Name
-              </div>
-              <div class="info-value">{{ issue.name }}</div>
+          <div class="px-4 py-4 space-y-3">
+            <div class="flex items-center justify-between py-2">
+              <span class="text-sm text-gray-500">Name</span>
+              <span class="text-sm font-medium text-gray-900">{{ issue.name }}</span>
             </div>
-            <div class="info-row">
-              <div class="info-label">
-                <i class="fas fa-envelope"></i>
-                Email
-              </div>
-              <div class="info-value">
-                <a [href]="'mailto:' + issue.email">{{ issue.email }}</a>
-              </div>
+            <div class="flex items-center justify-between py-2 border-t border-gray-100">
+              <span class="text-sm text-gray-500">Email</span>
+              <a
+                [href]="'mailto:' + issue.email"
+                class="text-sm font-medium text-blue-600 hover:text-blue-700"
+              >
+                {{ issue.email }}
+              </a>
             </div>
           </div>
         </div>
 
         <!-- Message -->
-        <div class="card">
-          <div class="card-header">
-            <i class="fas fa-message"></i>
-            <h2>Message</h2>
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div class="border-b border-gray-200 px-4 py-3">
+            <h2 class="text-sm font-semibold text-gray-900 flex items-center gap-2">
+              <i class="fas fa-message text-gray-400"></i>
+              Message
+            </h2>
           </div>
-          <div class="card-content">
-            <p class="message-text">{{ issue.message }}</p>
+          <div class="px-4 py-4">
+            <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ issue.message }}</p>
           </div>
         </div>
 
         <!-- Internal Notes -->
         @if (issue.notes) {
-        <div class="card">
-          <div class="card-header">
-            <i class="fas fa-note-sticky"></i>
-            <h2>Internal Notes</h2>
+        <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+          <div class="border-b border-gray-200 px-4 py-3">
+            <h2 class="text-sm font-semibold text-gray-900 flex items-center gap-2">
+              <i class="fas fa-note-sticky text-gray-400"></i>
+              Internal Notes
+            </h2>
           </div>
-          <div class="card-content">
-            <p class="notes-text">{{ issue.notes }}</p>
+          <div class="px-4 py-4">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-3 rounded">
+              <p class="text-sm text-gray-700 whitespace-pre-wrap">{{ issue.notes }}</p>
+            </div>
           </div>
         </div>
         }
