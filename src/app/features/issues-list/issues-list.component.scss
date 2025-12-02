@@ -1,11 +1,10 @@
-.issues-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
+// Minimal custom styles - most styling is done with TailwindCSS
 
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .header {

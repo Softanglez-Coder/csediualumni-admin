@@ -1,12 +1,5 @@
-.issue-detail-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  padding: 2rem;
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-}
+// Minimal custom styles - most styling is done with TailwindCSS
+// Only needed for utilities not available in TailwindCSS
 
 // Loading
 .loading {

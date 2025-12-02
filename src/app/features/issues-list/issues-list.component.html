@@ -1,166 +1,209 @@
-<div class="issues-container">
-  <div class="header">
-    <div class="header-content">
-      <div class="title-section">
-        <h1 class="title">
-          <i class="fas fa-inbox"></i>
-          Issues Management
-        </h1>
-        <p class="subtitle">Manage and track all contact submissions</p>
-      </div>
-    </div>
-
-    <!-- Stats Cards -->
-    @if (stats) {
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon total">
-          <i class="fas fa-inbox"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">{{ stats.total }}</div>
-          <div class="stat-label">Total Issues</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon open">
-          <i class="fas fa-circle-exclamation"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">{{ stats.open }}</div>
-          <div class="stat-label">Open</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon in-progress">
-          <i class="fas fa-spinner"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">{{ stats.inProgress }}</div>
-          <div class="stat-label">In Progress</div>
-        </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-icon resolved">
-          <i class="fas fa-circle-check"></i>
-        </div>
-        <div class="stat-content">
-          <div class="stat-value">{{ stats.resolved }}</div>
-          <div class="stat-label">Resolved</div>
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-xl font-semibold text-gray-900">Issues</h1>
+          <p class="mt-0.5 text-sm text-gray-500">Manage contact submissions</p>
         </div>
       </div>
     </div>
-    }
   </div>
 
-  <div class="content">
-    <!-- Filters and Search -->
-    <div class="controls">
-      <div class="filter-tabs">
-        <button
-          class="filter-tab"
-          [class.active]="selectedFilter === 'all'"
-          (click)="filterByStatus('all')"
-        >
-          <i class="fas fa-list"></i>
-          All
-        </button>
-        <button
-          class="filter-tab"
-          [class.active]="selectedFilter === IssueStatus.OPEN"
-          (click)="filterByStatus(IssueStatus.OPEN)"
-        >
-          <i class="fas fa-circle-exclamation"></i>
-          Open
-        </button>
-        <button
-          class="filter-tab"
-          [class.active]="selectedFilter === IssueStatus.IN_PROGRESS"
-          (click)="filterByStatus(IssueStatus.IN_PROGRESS)"
-        >
-          <i class="fas fa-spinner"></i>
-          In Progress
-        </button>
-        <button
-          class="filter-tab"
-          [class.active]="selectedFilter === IssueStatus.RESOLVED"
-          (click)="filterByStatus(IssueStatus.RESOLVED)"
-        >
-          <i class="fas fa-circle-check"></i>
-          Resolved
-        </button>
-        <button
-          class="filter-tab"
-          [class.active]="selectedFilter === IssueStatus.WONT_RESOLVE"
-          (click)="filterByStatus(IssueStatus.WONT_RESOLVE)"
-        >
-          <i class="fas fa-circle-xmark"></i>
-          Won't Resolve
-        </button>
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Stats Cards -->
+    @if (stats) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Total</p>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats.total }}</p>
+          </div>
+          <div class="p-2 bg-blue-50 rounded-lg">
+            <i class="fas fa-inbox text-blue-600 text-lg"></i>
+          </div>
+        </div>
       </div>
 
-      <div class="search-box">
-        <i class="fas fa-search"></i>
-        <input
-          type="text"
-          placeholder="Search issues..."
-          (input)="onSearchChange($any($event.target).value)"
-          [value]="searchQuery"
-        />
+      <div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Open</p>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats.open }}</p>
+          </div>
+          <div class="p-2 bg-red-50 rounded-lg">
+            <i class="fas fa-circle-exclamation text-red-600 text-lg"></i>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Issues List -->
-    @if (isLoading) {
-    <div class="loading">
-      <i class="fas fa-spinner fa-spin"></i>
-      <p>Loading issues...</p>
-    </div>
-    } @else if (filteredIssues.length === 0) {
-    <div class="empty-state">
-      <i class="fas fa-inbox"></i>
-      <h3>No issues found</h3>
-      <p>{{ searchQuery ? 'Try adjusting your search or filters' : 'No issues to display' }}</p>
-    </div>
-    } @else {
-    <div class="issues-list">
-      @for (issue of filteredIssues; track issue._id) {
-      <a [routerLink]="['/issues', issue._id]" class="issue-card">
-        <div class="issue-header">
-          <div class="issue-meta">
-            <span class="issue-status" [ngClass]="getStatusClass(issue.status)">
-              <i class="fas" [ngClass]="getStatusIcon(issue.status)"></i>
-              {{ getStatusLabel(issue.status) }}
-            </span>
-            <span class="issue-date">
-              <i class="fas fa-clock"></i>
-              {{ formatDate(issue.createdAt) }}
-            </span>
+      <div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">In Progress</p>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats.inProgress }}</p>
+          </div>
+          <div class="p-2 bg-yellow-50 rounded-lg">
+            <i class="fas fa-spinner text-yellow-600 text-lg"></i>
           </div>
         </div>
+      </div>
 
-        <h3 class="issue-subject">{{ issue.subject }}</h3>
-
-        <div class="issue-body">
-          <p class="issue-message">{{ issue.message }}</p>
-        </div>
-
-        <div class="issue-footer">
-          <div class="issue-author">
-            <i class="fas fa-user"></i>
-            <span>{{ issue.name }}</span>
+      <div class="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Resolved</p>
+            <p class="mt-1 text-2xl font-semibold text-gray-900">{{ stats.resolved }}</p>
           </div>
-          <div class="issue-email">
-            <i class="fas fa-envelope"></i>
-            <span>{{ issue.email }}</span>
+          <div class="p-2 bg-green-50 rounded-lg">
+            <i class="fas fa-circle-check text-green-600 text-lg"></i>
           </div>
         </div>
-      </a>
-      }
+      </div>
     </div>
     }
+
+    <!-- Main Content Card -->
+    <div class="bg-white rounded-lg border border-gray-200 shadow-sm">
+      <!-- Toolbar -->
+      <div class="border-b border-gray-200 px-4 py-3">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <!-- Filters -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button
+              (click)="filterByStatus('all')"
+              [class]="
+                selectedFilter === 'all'
+                  ? 'px-3 py-1.5 text-xs font-medium rounded-md bg-blue-50 text-blue-700 border border-blue-200'
+                  : 'px-3 py-1.5 text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              "
+            >
+              All
+            </button>
+            <button
+              (click)="filterByStatus(IssueStatus.OPEN)"
+              [class]="
+                selectedFilter === IssueStatus.OPEN
+                  ? 'px-3 py-1.5 text-xs font-medium rounded-md bg-red-50 text-red-700 border border-red-200'
+                  : 'px-3 py-1.5 text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              "
+            >
+              Open
+            </button>
+            <button
+              (click)="filterByStatus(IssueStatus.IN_PROGRESS)"
+              [class]="
+                selectedFilter === IssueStatus.IN_PROGRESS
+                  ? 'px-3 py-1.5 text-xs font-medium rounded-md bg-yellow-50 text-yellow-700 border border-yellow-200'
+                  : 'px-3 py-1.5 text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              "
+            >
+              In Progress
+            </button>
+            <button
+              (click)="filterByStatus(IssueStatus.RESOLVED)"
+              [class]="
+                selectedFilter === IssueStatus.RESOLVED
+                  ? 'px-3 py-1.5 text-xs font-medium rounded-md bg-green-50 text-green-700 border border-green-200'
+                  : 'px-3 py-1.5 text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              "
+            >
+              Resolved
+            </button>
+            <button
+              (click)="filterByStatus(IssueStatus.WONT_RESOLVE)"
+              [class]="
+                selectedFilter === IssueStatus.WONT_RESOLVE
+                  ? 'px-3 py-1.5 text-xs font-medium rounded-md bg-gray-100 text-gray-700 border border-gray-300'
+                  : 'px-3 py-1.5 text-xs font-medium rounded-md bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
+              "
+            >
+              Won't Resolve
+            </button>
+          </div>
+
+          <!-- Search -->
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i class="fas fa-search text-gray-400 text-sm"></i>
+            </div>
+            <input
+              type="text"
+              class="block w-full sm:w-64 pl-9 pr-3 py-1.5 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+              placeholder="Search issues..."
+              (input)="onSearchChange($any($event.target).value)"
+              [value]="searchQuery"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Issues List -->
+      <div class="divide-y divide-gray-200">
+        @if (isLoading) {
+        <div class="flex flex-col items-center justify-center py-12">
+          <i class="fas fa-spinner fa-spin text-3xl text-blue-500 mb-3"></i>
+          <p class="text-sm text-gray-500">Loading issues...</p>
+        </div>
+        } @else if (filteredIssues.length === 0) {
+        <div class="flex flex-col items-center justify-center py-12">
+          <i class="fas fa-inbox text-4xl text-gray-300 mb-3"></i>
+          <h3 class="text-sm font-medium text-gray-900 mb-1">No issues found</h3>
+          <p class="text-sm text-gray-500">
+            {{ searchQuery ? 'Try adjusting your search or filters' : 'No issues to display' }}
+          </p>
+        </div>
+        } @else { @for (issue of filteredIssues; track issue._id) {
+        <a
+          [routerLink]="['/issues', issue._id]"
+          class="block px-4 py-3 hover:bg-gray-50 transition-colors"
+        >
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3 mb-1">
+                <span
+                  [ngClass]="{
+                    'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium': true,
+                    'bg-red-100 text-red-800': issue.status === IssueStatus.OPEN,
+                    'bg-yellow-100 text-yellow-800': issue.status === IssueStatus.IN_PROGRESS,
+                    'bg-green-100 text-green-800': issue.status === IssueStatus.RESOLVED,
+                    'bg-gray-100 text-gray-800': issue.status === IssueStatus.WONT_RESOLVE
+                  }"
+                >
+                  <i class="fas mr-1 text-[10px]" [ngClass]="getStatusIcon(issue.status)"></i>
+                  {{ getStatusLabel(issue.status) }}
+                </span>
+                <span class="text-xs text-gray-500">
+                  <i class="fas fa-clock mr-1"></i>
+                  {{ formatDate(issue.createdAt) }}
+                </span>
+              </div>
+              <h3 class="text-sm font-medium text-gray-900 truncate mb-1">
+                {{ issue.subject }}
+              </h3>
+              <p class="text-sm text-gray-600 line-clamp-2 mb-2">
+                {{ issue.message }}
+              </p>
+              <div class="flex items-center gap-4 text-xs text-gray-500">
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-user"></i>
+                  {{ issue.name }}
+                </span>
+                <span class="flex items-center gap-1">
+                  <i class="fas fa-envelope"></i>
+                  {{ issue.email }}
+                </span>
+              </div>
+            </div>
+            <div class="shrink-0">
+              <i class="fas fa-chevron-right text-gray-400 text-sm"></i>
+            </div>
+          </div>
+        </a>
+        } }
+      </div>
+    </div>
   </div>
 </div>
